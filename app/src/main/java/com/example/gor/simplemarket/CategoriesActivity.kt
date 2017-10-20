@@ -2,64 +2,47 @@ package com.example.gor.simplemarket
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.widget.ProgressBar
 import android.widget.Toast
-import com.example.gor.simplemarket.service.Web
+import com.example.gor.simplemarket.model.Model
+import com.example.gor.simplemarket.model.adapters.MyListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 class CategoriesActivity : AppCompatActivity() {
 
-//    val recyclerView = RecyclerView(this)
-    /*val recyclerAdapder = ProductListAdapter()*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_categories)
 
+        val progressBar = findViewById(R.id.id_progressBar_main) as ProgressBar
+        progressBar.visibility = ProgressBar.VISIBLE
 
+        val recyclerView = findViewById(R.id.id_recycler_category) as RecyclerView
 
         //--------------------------------------------------------------------------------------
 
-        val client = getClient()
+        val client = App.getClient()
 
         val request = client.getCategoriesList()
         request.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .doOnSuccess { progressBar.visibility = ProgressBar.INVISIBLE }
                 .subscribeBy(
-                        onNext = {
-                            Toast.makeText(this, it.values.toTypedArray()[0].name, Toast.LENGTH_SHORT).show()
-
+                        onSuccess = {
+                            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+                            App.dataList = it.values.toTypedArray()
+                            val recyclerAdapter = MyListAdapter<Model.Category>(
+                                    layoutInflater, it.values.toTypedArray())
+                            recyclerView.adapter = recyclerAdapter
+                            recyclerView.layoutManager = GridLayoutManager(this, 2)
+                            recyclerView.setHasFixedSize(true)
                         },
-                        onError =  { Toast.makeText(this, /*it.categories.name*/
-                                "Error", Toast.LENGTH_SHORT).show()
-                            it.printStackTrace()},
-                        onComplete = { Toast.makeText(this, /*it.categories.name*/
-                                "Done!", Toast.LENGTH_SHORT).show()})
+                        onError =  { Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                            it.printStackTrace()})
 
     }
-
-
-
-    fun getClient(): Web{
-        return Retrofit.Builder()
-                .baseUrl(App.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build().create(Web::class.java)
-    }
-
-    /*client.getSubcategoriesList(
-    it.values.toTypedArray().filter
-    { it.name == "Мужская" }[0].subcategories?.get(2)?.id!!
-    ).observeOn(AndroidSchedulers.mainThread())
-    .subscribeOn(Schedulers.io())
-    .subscribeBy(
-    onNext = {Toast.makeText(this, *//*"Success"*//*
-            it.values.toTypedArray()[0].name,
-            Toast.LENGTH_SHORT).show()}
-    )*/
 }

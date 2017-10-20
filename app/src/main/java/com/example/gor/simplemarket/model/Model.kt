@@ -4,7 +4,6 @@ package com.example.gor.simplemarket.model
  * Created by Gor on 17.10.2017.
  */
 object Model {
-    /*data class Result(*//*@SerializedName("68") *//*val categories: Map<String, Category>)*/
     data class Category(val name: String,
                         val sortOrder: Int,
                         val image: String,
@@ -21,7 +20,7 @@ object Model {
     data class Product(val name: String,
                        val mainImage: String,
                        val offers: List<Offer>,
-                       val price: Int)
+                       val price: String)
     data class Offer(val size: String)
 
 

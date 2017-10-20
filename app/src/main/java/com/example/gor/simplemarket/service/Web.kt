@@ -1,7 +1,7 @@
 package com.example.gor.simplemarket.service
 
 import com.example.gor.simplemarket.model.Model
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,8 +12,9 @@ import retrofit2.http.Query
 interface Web {
 
     @GET("index.php?route=api/v1/categories")
-    fun getCategoriesList(): Observable<Map<String, Model.Category>>
+    fun getCategoriesList(): Single<Map<String, Model.Category>>
 
     @GET("index.php?route=api/v1/products")
-    fun getSubcategoriesList(@Query("cat_id") id: String): Observable<Map<String,Model.Product>>
+    fun getProductList(@Query("cat_id") id: String): Single<Map<String,Model.Product>>
+
 }
