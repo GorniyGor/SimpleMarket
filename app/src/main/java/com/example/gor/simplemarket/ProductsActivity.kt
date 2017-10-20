@@ -10,6 +10,7 @@ import com.example.gor.simplemarket.model.Model
 import com.example.gor.simplemarket.model.adapters.MyListAdapter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.observables.ConnectableObservable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
@@ -30,8 +31,6 @@ class ProductsActivity : AppCompatActivity() {
         spinner = findViewById(R.id.id_spinner) as Spinner
         spinner.adapter = ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, separation)
-
-
 
         //----------------------------------------------------------------------
 
@@ -63,7 +62,8 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun spinnerWorker(array: Array<Model.Product>){
-        Observable.create<Array<Model.Product>> {
+        val obs: ConnectableObservable<Array<Model.Product>> =
+                Observable.create<Array<Model.Product>> {
             spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener  {
                 override fun onNothingSelected(p0: AdapterView<*>?) {
                 }
@@ -73,8 +73,8 @@ class ProductsActivity : AppCompatActivity() {
                     it.onNext(
                             when(p2){
                         0 -> array
-                        1 -> arrayClone.apply{ arrayClone.sortBy { it.price.toDouble() }}
-                        2 -> arrayClone.apply{arrayClone.sortByDescending { it.price.toDouble() }}
+                        1 -> arrayClone.apply{ arrayClone.sortBy {it.price.toDouble()}}
+                        2 -> arrayClone.apply{ arrayClone.sortByDescending {it.price.toDouble()}}
                         3 -> array.filter {
                             it.offers.flatMap{listOf(it.size)}.contains(separation[3])
                         }.toTypedArray()
@@ -82,13 +82,15 @@ class ProductsActivity : AppCompatActivity() {
                     })
                 }
             }
-        }.subscribeBy (
-           onNext = {
-               recyclerView.adapter = MyListAdapter<Model.Product>(layoutInflater, it)
-               recyclerView.adapter.notifyDataSetChanged()},
-           onError = {
-               Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-               it.printStackTrace()}
+        }.publish()
+        obs.subscribeBy (
+                onNext = {
+                    recyclerView.adapter = MyListAdapter<Model.Product>(layoutInflater, it)
+                    recyclerView.adapter.notifyDataSetChanged()},
+                onError = {
+                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                    it.printStackTrace()}
         )
+        obs.connect()
     }
 }

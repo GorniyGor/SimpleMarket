@@ -34,10 +34,11 @@ class CategoriesActivity : AppCompatActivity() {
                 .subscribeBy(
                         onSuccess = {
                             Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+
                             App.dataList = it.values.toTypedArray()
-                            val recyclerAdapter = MyListAdapter<Model.Category>(
+
+                            recyclerView.adapter = MyListAdapter<Model.Category>(
                                     layoutInflater, it.values.toTypedArray())
-                            recyclerView.adapter = recyclerAdapter
                             recyclerView.layoutManager = GridLayoutManager(this, 2)
                             recyclerView.setHasFixedSize(true)
                         },
