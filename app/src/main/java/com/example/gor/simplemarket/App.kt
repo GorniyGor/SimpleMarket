@@ -15,6 +15,7 @@ class App: Application() {
 
     companion object {
         const val URL = "https://blackstarshop.ru/"
+        val separation = arrayOf("all", "price_up", "price_down", "XS")
         fun getClient(): Web {
             return Retrofit.Builder()
                     .baseUrl(App.URL)
