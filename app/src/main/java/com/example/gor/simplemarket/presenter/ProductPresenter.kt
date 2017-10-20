@@ -13,7 +13,7 @@ import io.reactivex.observables.ConnectableObservable
  */
 class ProductPresenter(view: View, data: Any) {
 
-    val spinner = view as Spinner
+    private val spinner = view as Spinner
     val array = data as Array<Model.Product>
 
     val obs: ConnectableObservable<Array<Model.Product>> =

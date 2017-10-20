@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.gor.simplemarket.model.Model
-import com.example.gor.simplemarket.model.adapters.MyListAdapter
+import com.example.gor.simplemarket.presenter.adapters.MyListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers

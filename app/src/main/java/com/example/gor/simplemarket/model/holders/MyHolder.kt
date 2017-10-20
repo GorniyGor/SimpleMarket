@@ -11,7 +11,7 @@ import com.example.gor.simplemarket.ProductsActivity
 import com.example.gor.simplemarket.R
 import com.example.gor.simplemarket.SubcategoriesActivity
 import com.example.gor.simplemarket.model.Model
-import com.example.gor.simplemarket.model.adapters.MyListAdapter
+import com.example.gor.simplemarket.presenter.adapters.MyListAdapter
 import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.Single
